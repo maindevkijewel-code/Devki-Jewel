@@ -63,6 +63,15 @@ export default function VirtualTryOn({
         const faceapi = await import("face-api.js")
         faceapiRef.current = faceapi
         setLoadProgress(30)
+        useEffect(() => {
+          const loadFaceApi = async () => {
+            const faceapi = await import("face-api.js")
+
+            await faceapi.nets.tinyFaceDetector.loadFromUri("/models")
+          }
+
+          loadFaceApi()
+        }, [])
 
         await faceapi.nets.tinyFaceDetector.loadFromUri("/models")
         if (cancelled) return

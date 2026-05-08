@@ -12,17 +12,17 @@ const nextConfig = {
       bodySizeLimit: '10mb',
     },
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        path: false,
-        crypto: false,
-        stream: false,
-        encoding: false,
-      };
-    }
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      path: false,
+      os: false,
+      canvas: false,
+      encoding: false,
+      crypto: false,
+      stream: false,
+    };
     return config;
   },
 }
