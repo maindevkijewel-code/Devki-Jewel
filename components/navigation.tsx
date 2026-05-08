@@ -678,7 +678,7 @@ function DevkiLogo() {
 
 function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { items, updateQuantity, removeFromCart, getTotalPrice, getDiscountAmount, getFinalPrice, appliedCoupon } = useCartStore()
-  
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -717,7 +717,7 @@ function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                   </div>
                   <h4 className="text-lg font-serif italic text-gray-900 mb-2">Your bag is empty</h4>
                   <p className="text-sm text-gray-400 mb-8 max-w-[200px]">Discover our exquisite collections and find your perfect piece.</p>
-                  <button 
+                  <button
                     onClick={onClose}
                     className="px-8 py-3 bg-[#1A1A1A] text-white rounded-full text-xs font-bold tracking-widest uppercase active:scale-95 transition-all shadow-lg"
                   >
@@ -729,10 +729,10 @@ function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                   {items.map((item) => (
                     <div key={item.product.id} className="flex gap-4 group">
                       <div className="w-24 h-32 bg-gray-50 rounded-2xl overflow-hidden relative shrink-0 border border-gray-100">
-                        <Image 
-                          src={item.product.image_urls?.[0] || item.product.image || ""} 
-                          alt={item.product.name} 
-                          fill 
+                        <Image
+                          src={item.product.image_urls?.[0] || item.product.image || ""}
+                          alt={item.product.name}
+                          fill
                           className="object-cover"
                           sizes="96px"
                         />
@@ -740,7 +740,7 @@ function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                       <div className="flex-1 min-w-0 flex flex-col">
                         <div className="flex justify-between gap-2 mb-1">
                           <h4 className="text-sm font-bold text-gray-900 line-clamp-1">{item.product.name}</h4>
-                          <button 
+                          <button
                             onClick={() => removeFromCart(item.product.id)}
                             className="text-gray-300 hover:text-red-500 transition-colors"
                           >
@@ -748,17 +748,17 @@ function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                           </button>
                         </div>
                         <p className="text-[11px] text-gray-500 uppercase tracking-wider mb-auto">Metal: {item.product.metal_type || 'Gold'}</p>
-                        
+
                         <div className="flex items-end justify-between mt-4">
                           <div className="flex items-center border border-gray-100 rounded-lg p-1 bg-gray-50/50">
-                            <button 
+                            <button
                               onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                               className="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-[#522D6D] active:scale-90"
                             >
                               -
                             </button>
                             <span className="w-8 text-center text-xs font-bold text-gray-900">{item.quantity}</span>
-                            <button 
+                            <button
                               onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                               className="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-[#522D6D] active:scale-90"
                             >
@@ -798,14 +798,14 @@ function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                   </div>
                 </div>
 
-                <Link 
+                <Link
                   href="/checkout"
                   onClick={onClose}
                   className="block w-full py-4 bg-[#1A1A1A] text-white text-center rounded-2xl text-[11px] font-bold tracking-[0.2em] uppercase hover:bg-[#522D6D] transition-all shadow-xl active:scale-[0.98]"
                 >
                   Proceed to Checkout
                 </Link>
-                
+
                 <p className="text-[10px] text-gray-400 text-center font-medium">Safe & Secure Checkout • Tax Included</p>
               </div>
             )}
