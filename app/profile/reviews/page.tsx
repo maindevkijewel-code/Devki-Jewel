@@ -136,7 +136,7 @@ export default function ReviewsPage() {
             pendingItems.map((item) => (
               <div key={item.product_id} className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col md:flex-row gap-6">
                 <div className="w-20 h-20 bg-gray-50 rounded-lg shrink-0 relative overflow-hidden">
-                  <Image src={item.product_image || "/placeholder.png"} alt={item.product_name} fill className="object-contain p-2" />
+                  <img src={item.product_image || "/placeholder.jpg"} alt={item.product_name} className="w-full h-full object-contain p-2" />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-gray-900 line-clamp-1">{item.product_name}</h3>
@@ -200,7 +200,7 @@ export default function ReviewsPage() {
               return (
               <div key={review.id} className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col md:flex-row gap-6">
                 <div className="w-20 h-20 bg-gray-50 rounded-lg shrink-0 relative overflow-hidden">
-                  <Image src={product?.image || "/placeholder.png"} alt={product?.name || "Product"} fill className="object-contain p-2" />
+                  <img src={product?.image || "/placeholder.jpg"} alt={product?.name || "Product"} className="w-full h-full object-contain p-2" />
                 </div>
                 <div className="flex-1">
                   <Link href={`/product/${review.product_id}`} className="font-semibold text-gray-900 hover:text-[#522D6D] transition-colors">

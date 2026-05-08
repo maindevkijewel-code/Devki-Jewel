@@ -393,7 +393,7 @@ function SecondaryBanners() {
         <Link href="/collections" className="group relative overflow-hidden rounded-xl block">
           <div className="relative aspect-[16/7] bg-gradient-to-r from-[#3D1952] via-[#522D6D] to-[#3D1952]">
             <Image
-              src="/images/Rings/WhatsApp Image 2026-05-06 at 10.39.48.jpeg"
+              src="/images/Rings/whatsapp-image.jpeg"
               alt="Collections"
               fill
               className="object-cover opacity-50 group-hover:opacity-60 group-hover:scale-105 transition-all duration-500"

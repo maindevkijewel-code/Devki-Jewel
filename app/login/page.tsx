@@ -91,11 +91,9 @@ export default function LoginPage() {
       >
         {/* Logo */}
         <Link href="/" className="flex justify-center mb-8">
-          <Image
+          <img
             src="/logo.png"
             alt="Devki Jewels"
-            width={140}
-            height={46}
             className="h-14 w-auto object-contain"
           />
         </Link>

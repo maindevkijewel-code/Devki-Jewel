@@ -166,7 +166,7 @@ export default function OrderDetailPage() {
           {(order.order_items || []).map((item: any, idx: number) => (
             <div key={idx} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
               <div className="relative w-16 h-16 bg-white rounded-lg overflow-hidden shrink-0">
-                <Image src={item.product_image || "/placeholder.jpg"} alt={item.product_name || "Product"} fill className="object-contain p-1" sizes="64px" />
+                <img src={item.product_image || "/placeholder.jpg"} alt={item.product_name || "Product"} className="w-full h-full object-contain p-1" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 line-clamp-1">{item.product_name}</p>

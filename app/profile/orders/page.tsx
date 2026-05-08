@@ -134,7 +134,7 @@ export default function OrdersPage() {
                 <div className="flex gap-3 mb-4">
                   {order.items.slice(0, 3).map((item, idx) => (
                     <div key={idx} className="relative w-16 h-16 bg-gray-50 rounded-lg overflow-hidden">
-                      <Image src={item.product_image || "/placeholder.jpg"} alt={item.product_name} fill className="object-contain p-1" sizes="64px" />
+                      <img src={item.product_image || "/placeholder.jpg"} alt={item.product_name} className="w-full h-full object-contain p-1" />
                     </div>
                   ))}
                   {order.items.length > 3 && (

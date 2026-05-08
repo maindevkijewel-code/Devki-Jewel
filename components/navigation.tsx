@@ -617,12 +617,10 @@ export function Navigation() {
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="relative block rounded-xl overflow-hidden min-h-[80px]"
                       >
-                        <Image
+                        <img
                           src={categoryImages[category.name] || "/images/hero-jewelry.jpg"}
                           alt={category.name}
-                          fill
-                          className="object-cover"
-                          sizes="50vw"
+                          className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                         <span className="absolute bottom-3 left-3 text-white font-semibold text-sm drop-shadow-lg">
