@@ -2,6 +2,7 @@
 
 import { createAdminClient } from "@/lib/supabase-server"
 
+// ── Fetch all settings as key-value map ─────────────────────────────────────
 export async function getSettings() {
   const supabase = createAdminClient()
 
@@ -19,6 +20,7 @@ export async function getSettings() {
   return settings
 }
 
+// ── Upsert settings ─────────────────────────────────────────────────────────
 export async function updateSettings(settings: Record<string, string>) {
   const supabase = createAdminClient()
 
@@ -37,6 +39,10 @@ export async function updateSettings(settings: Record<string, string>) {
   return { success: true }
 }
 
+// ── Upload logo to Supabase Storage ─────────────────────────────────────────
+const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp", "image/svg+xml"]
+const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5MB
+
 export async function uploadSiteAsset(formData: FormData) {
   const supabase = createAdminClient()
   const file = formData.get("file") as File
@@ -45,8 +51,23 @@ export async function uploadSiteAsset(formData: FormData) {
     return { success: false, error: "No file provided" }
   }
 
-  const fileExt = file.name.split(".").pop()
-  const fileName = `logo-${Date.now()}.${fileExt}`
+  // Validate file type
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return { success: false, error: "Invalid file type. Allowed: PNG, JPG, WEBP, SVG" }
+  }
+
+  // Validate file size
+  if (file.size > MAX_SIZE_BYTES) {
+    return { success: false, error: "File too large. Maximum size is 5MB" }
+  }
+
+  // Store in logos/ subdirectory with unique timestamp name
+  const fileExt = file.name.split(".").pop()?.toLowerCase() || "png"
+  const sanitizedName = file.name
+    .replace(/\.[^/.]+$/, "")
+    .replace(/[^a-zA-Z0-9-_]/g, "-")
+    .toLowerCase()
+  const fileName = `logos/${Date.now()}-${sanitizedName}.${fileExt}`
 
   const { error } = await supabase.storage
     .from("site-assets")
@@ -63,6 +84,9 @@ export async function uploadSiteAsset(formData: FormData) {
   const { data: urlData } = supabase.storage
     .from("site-assets")
     .getPublicUrl(fileName)
+
+  // Also save logo_url to settings automatically
+  await supabase.from("settings").upsert({ key: "logo_url", value: urlData.publicUrl })
 
   return { success: true, url: urlData.publicUrl }
 }

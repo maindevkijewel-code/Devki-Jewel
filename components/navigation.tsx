@@ -10,6 +10,7 @@ import { useCartStore } from "@/store/cartStore"
 import { useAuthStore } from "@/store/auth-store"
 import { getSupabaseBrowserClient } from "@/lib/supabase"
 import { SERVICES } from "@/lib/config/services"
+import { useSiteSettings } from "@/hooks/use-site-settings"
 
 const initialNavCategories = [
   {
@@ -662,16 +663,23 @@ export function Navigation() {
 }
 
 function DevkiLogo() {
+  const { settings, isLoading } = useSiteSettings()
+  const logoUrl = settings.logo_url || "/logo.png"
+
   return (
     <div className="flex items-center gap-2">
-      <Image
-        src="/logo.png"
-        alt="Devki Jewels Logo"
-        width={120}
-        height={40}
-        className="h-12 w-auto object-contain max-md:h-8"
-        priority
-      />
+      {isLoading ? (
+        <div className="h-12 w-[120px] max-md:h-8 max-md:w-[80px] bg-gray-100 rounded-lg animate-pulse" />
+      ) : (
+        <img
+          src={logoUrl}
+          alt={settings.site_name || "Devki Jewels"}
+          className="h-12 w-auto object-contain max-md:h-8"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "/logo.png"
+          }}
+        />
+      )}
     </div>
   )
 }
