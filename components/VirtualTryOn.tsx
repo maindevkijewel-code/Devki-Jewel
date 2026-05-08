@@ -10,6 +10,11 @@ import { useCartStore } from "@/store/cartStore"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { toast } from "sonner"
 
+// ─── NO top-level import of face-api.js ─────────────────────────────────────
+// face-api.js is loaded ONLY at runtime via dynamic import() inside useEffect.
+// This prevents Webpack from bundling Node-only deps (fs, encoding, node-fetch)
+// into the server build, which would crash Vercel deployment.
+
 interface VirtualTryOnProps {
   isOpen: boolean
   onClose: () => void
@@ -52,15 +57,19 @@ export default function VirtualTryOn({
     : productCategory?.toLowerCase().includes("necklace") || productCategory?.toLowerCase().includes("choker")
       ? "necklace" : "other"
 
-  // Load face-api.js models
+  // ── 1. Load face-api.js models (client-only, dynamic import) ──────────────
   useEffect(() => {
     if (!isOpen) return
+    if (typeof window === "undefined") return // SSR guard
     let cancelled = false
 
     async function loadModels() {
       try {
         setLoadProgress(10)
+
+        // Dynamic import — face-api.js is NEVER in the server bundle
         const faceapi = await import("face-api.js")
+        if (cancelled) return
         faceapiRef.current = faceapi
         setLoadProgress(30)
 
@@ -75,7 +84,7 @@ export default function VirtualTryOn({
         setTimeout(() => { if (!cancelled) setModelsLoaded(true) }, 300)
       } catch (err) {
         console.error("Failed to load face-api models:", err)
-        toast.error("Failed to load face detection models")
+        if (!cancelled) toast.error("Failed to load face detection models")
       }
     }
 
@@ -83,9 +92,9 @@ export default function VirtualTryOn({
     return () => { cancelled = true }
   }, [isOpen])
 
-  // Load jewellery image
+  // ── 2. Load jewellery overlay image ───────────────────────────────────────
   useEffect(() => {
-    if (!isOpen || !productImageUrl) return
+    if (!isOpen || !productImageUrl || typeof window === "undefined") return
     const img = new window.Image()
     img.crossOrigin = "anonymous"
     img.onload = () => { jewelleryImgRef.current = img }
@@ -93,7 +102,7 @@ export default function VirtualTryOn({
     img.src = productImageUrl
   }, [isOpen, productImageUrl])
 
-  // Cleanup
+  // ── 3. Cleanup when modal closes ──────────────────────────────────────────
   useEffect(() => {
     if (!isOpen) {
       stopCamera()
@@ -107,6 +116,7 @@ export default function VirtualTryOn({
     }
   }, [isOpen])
 
+  // ── Camera helpers ────────────────────────────────────────────────────────
   const stopCamera = useCallback(() => {
     if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
     streamRef.current?.getTracks().forEach((t) => t.stop())
@@ -137,13 +147,13 @@ export default function VirtualTryOn({
     }
   }, [])
 
-  // Start camera when tab = camera and models loaded
+  // ── 4. Auto-start camera when ready ───────────────────────────────────────
   useEffect(() => {
     if (isOpen && tab === "camera" && modelsLoaded && !hasResult) startCamera()
     return () => { if (tab === "camera") stopCamera() }
-  }, [isOpen, tab, modelsLoaded])
+  }, [isOpen, tab, modelsLoaded, hasResult, startCamera, stopCamera])
 
-  // Detect face and draw overlay on a canvas from an image source
+  // ── Face detection + jewellery overlay drawing ────────────────────────────
   const detectAndDraw = useCallback(async (source: HTMLVideoElement | HTMLImageElement) => {
     const faceapi = faceapiRef.current
     const canvas = canvasRef.current
@@ -179,10 +189,8 @@ export default function VirtualTryOn({
     setNoFace(false)
     const landmarks = detection.landmarks
     const jaw = landmarks.getJawOutline()
-    const positions = landmarks.positions
 
     if (jewelleryType === "earring") {
-      // Ear landmarks: jaw[0] = left, jaw[16] = right
       const leftEar = jaw[0]
       const rightEar = jaw[16]
       const faceWidth = Math.abs(rightEar.x - leftEar.x)
@@ -199,7 +207,6 @@ export default function VirtualTryOn({
         ctx.restore()
       }
     } else {
-      // Necklace: midpoint of jaw[3] and jaw[13], shifted down
       const left = jaw[3]
       const right = jaw[13]
       const cx = (left.x + right.x) / 2 + manualOffset.x
@@ -220,7 +227,7 @@ export default function VirtualTryOn({
     setIsDetecting(false)
   }, [jewelleryType, manualOffset, manualScale])
 
-  // Live camera loop
+  // ── 5. Live camera detection loop ─────────────────────────────────────────
   useEffect(() => {
     if (!cameraActive || !modelsLoaded || hasResult) return
     let running = true
@@ -239,16 +246,15 @@ export default function VirtualTryOn({
     return () => { running = false; cancelAnimationFrame(animFrameRef.current) }
   }, [cameraActive, modelsLoaded, hasResult, detectAndDraw])
 
-  // Re-draw when manual adjustments change
+  // ── 6. Re-draw when manual adjustments change ─────────────────────────────
   useEffect(() => {
     if (!hasResult) return
-    // Re-detect with current source
-    const canvas = canvasRef.current
-    if (canvas && videoRef.current && tab === "camera") {
+    if (videoRef.current && tab === "camera") {
       detectAndDraw(videoRef.current)
     }
-  }, [manualOffset, manualScale])
+  }, [manualOffset, manualScale, hasResult, tab, detectAndDraw])
 
+  // ── Action handlers ───────────────────────────────────────────────────────
   const captureFrame = useCallback(() => {
     if (!videoRef.current) return
     setIsDetecting(true)
@@ -302,7 +308,7 @@ export default function VirtualTryOn({
     if (tab === "camera") startCamera()
   }, [tab, startCamera])
 
-  // Touch handlers
+  // ── Touch handlers for pinch/drag ─────────────────────────────────────────
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (e.touches.length === 1) {
       touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, dist: 0 }
@@ -332,6 +338,7 @@ export default function VirtualTryOn({
     }
   }, [])
 
+  // ── Render ────────────────────────────────────────────────────────────────
   if (!isOpen) return null
 
   return (
