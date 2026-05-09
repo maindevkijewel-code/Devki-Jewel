@@ -99,10 +99,10 @@ export function Navigation() {
       const { data, error } = await supabase.from('products').select('category, metal_type, gemstone, is_active')
       if (data && !error) {
         // Filter out inactive products
-        const activeProducts = data.filter(p => p.is_active !== false)
+        const activeProducts = data.filter((p: any) => p.is_active !== false)
 
-        const allMetals = Array.from(new Set(activeProducts.map(p => p.metal_type).filter(Boolean))) as string[]
-        const allGemstones = Array.from(new Set(activeProducts.map(p => p.gemstone).filter(Boolean))) as string[]
+        const allMetals = Array.from(new Set(activeProducts.map((p: any) => p.metal_type).filter(Boolean))) as string[]
+        const allGemstones = Array.from(new Set(activeProducts.map((p: any) => p.gemstone).filter(Boolean))) as string[]
 
         setDynamicCategories(prev => prev.map(cat => {
           if (cat.name === "Jewellery") {
@@ -119,9 +119,9 @@ export function Navigation() {
           // We can also make others dynamic if needed, e.g. Rings
           if (cat.name.toLowerCase() === "rings" || cat.name.toLowerCase() === "earrings" || cat.name.toLowerCase() === "necklaces" || cat.name.toLowerCase() === "bangles") {
             const baseCategory = cat.name.toLowerCase()
-            const catProducts = activeProducts.filter(p => p.category?.toLowerCase() === baseCategory)
-            const catMetals = Array.from(new Set(catProducts.map(p => p.metal_type).filter(Boolean))) as string[]
-            const catGemstones = Array.from(new Set(catProducts.map(p => p.gemstone).filter(Boolean))) as string[]
+            const catProducts = activeProducts.filter((p: any) => p.category?.toLowerCase() === baseCategory)
+            const catMetals = Array.from(new Set(catProducts.map((p: any) => p.metal_type).filter(Boolean))) as string[]
+            const catGemstones = Array.from(new Set(catProducts.map((p: any) => p.gemstone).filter(Boolean))) as string[]
 
             const items: any[] = []
             catGemstones.forEach(g => {
