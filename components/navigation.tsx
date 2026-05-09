@@ -735,12 +735,10 @@ function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                   {items.map((item) => (
                     <div key={item.product.id} className="flex gap-4 group">
                       <div className="w-24 h-32 bg-gray-50 rounded-2xl overflow-hidden relative shrink-0 border border-gray-100">
-                        <Image
-                          src={item.product.image_urls?.[0] || item.product.image || ""}
+                        <img
+                          src={item.product.images?.[0] || item.product.image ? ((item.product.images?.[0] || item.product.image).startsWith("http") || (item.product.images?.[0] || item.product.image).startsWith("/") ? (item.product.images?.[0] || item.product.image) : `/${item.product.images?.[0] || item.product.image}`) : "/placeholder.jpg"}
                           alt={item.product.name}
-                          fill
-                          className="object-cover"
-                          sizes="96px"
+                          className="w-full h-full object-cover"
                         />
                       </div>
                       <div className="flex-1 min-w-0 flex flex-col">
@@ -753,7 +751,7 @@ function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                             <X className="w-4 h-4" />
                           </button>
                         </div>
-                        <p className="text-[11px] text-gray-500 uppercase tracking-wider mb-auto">Metal: {item.product.metal_type || 'Gold'}</p>
+                        <p className="text-[11px] text-gray-500 uppercase tracking-wider mb-auto">Metal: {item.product.material || 'Gold'}</p>
 
                         <div className="flex items-end justify-between mt-4">
                           <div className="flex items-center border border-gray-100 rounded-lg p-1 bg-gray-50/50">
