@@ -70,7 +70,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
       <Link href={product.href} className="block relative w-full aspect-[4/5] bg-[#FDFBF9] rounded-xl overflow-hidden mb-4">
         {/* Main Image */}
         <img
-          src={product.image.startsWith("http") || product.image.startsWith("/") ? product.image : `/${product.image}`}
+          src={product.image ? (product.image.startsWith("http") || product.image.startsWith("/") ? product.image : `/${product.image}`) : "/placeholder.jpg"}
           alt={product.name}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${isHovered && (product.hover_video_url || product.hoverImage) ? "opacity-0" : "opacity-100"}`}
         />
@@ -87,7 +87,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           />
         ) : product.hoverImage ? (
           <img
-            src={product.hoverImage.startsWith("http") || product.hoverImage.startsWith("/") ? product.hoverImage : `/${product.hoverImage}`}
+            src={product.hoverImage ? (product.hoverImage.startsWith("http") || product.hoverImage.startsWith("/") ? product.hoverImage : `/${product.hoverImage}`) : "/placeholder.jpg"}
             alt={`${product.name} alternate`}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${isHovered ? "opacity-100" : "opacity-0"}`}
           />
