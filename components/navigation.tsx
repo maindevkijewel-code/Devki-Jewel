@@ -662,7 +662,7 @@ export function Navigation() {
 
 function DevkiLogo() {
   const { settings, isLoading } = useSiteSettings()
-  const logoUrl = settings.logo_url || "public/images/devkijewel_logo.png"
+  const logoUrl = settings.logo_url || "devkijewel_logo.png"
 
   return (
     <div className="flex items-center gap-2">
@@ -674,7 +674,7 @@ function DevkiLogo() {
           alt={settings.site_name || "Devki Jewels"}
           className="h-12 w-auto object-contain max-md:h-8"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = "/images/devkijewel_logo.png"
+            (e.target as HTMLImageElement).src = "public/images/devkijewel_logo.png"
           }}
         />
       )}
