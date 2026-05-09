@@ -662,7 +662,7 @@ export function Navigation() {
 
 function DevkiLogo() {
   const { settings, isLoading } = useSiteSettings()
-  const logoUrl = settings.logo_url || "/images/devkijewel_logo.png"
+  const logoUrl = settings.logo_url || "public/images/devkijewel_logo.png"
 
   return (
     <div className="flex items-center gap-2">
