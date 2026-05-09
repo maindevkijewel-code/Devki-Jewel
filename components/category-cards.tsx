@@ -82,24 +82,22 @@ export function CategoryCards() {
                   <Link href={`/collections/${collection.slug}`} className="group block text-center">
                     <div className="relative aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-[#522D6D] transition-all duration-500 shadow-sm group-hover:shadow-lg">
                       {collection.thumbnail_image ? (
-                      <Image
-                          src={collection.thumbnail_image}
+                      <img
+                          src={collection.thumbnail_image.startsWith("http") || collection.thumbnail_image.startsWith("/") ? collection.thumbnail_image : `/${collection.thumbnail_image}`}
                         alt={collection.name}
-                        fill
-                          className="object-cover group-hover:scale-110 transition-transform duration-500"
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#522D6D]/10 to-[#B76E79]/10 flex items-center justify-center">
+                        <div className="w-full h-full bg-gradient-to-br from-[#522D6D]/10 to-[#B76E79]/10 flex items-center justify-center absolute inset-0">
                           <span className="text-2xl font-bold text-[#522D6D]/30">{collection.name[0]}</span>
                         </div>
                       )}
                       {/* Hover image overlay */}
                       {collection.hover_image && (
-                        <Image
-                          src={collection.hover_image}
+                        <img
+                          src={collection.hover_image.startsWith("http") || collection.hover_image.startsWith("/") ? collection.hover_image : `/${collection.hover_image}`}
                           alt=""
-                          fill
-                          className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                          className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                         />
                       )}
                     </div>

@@ -69,12 +69,10 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
       {/* Image Container - 4:5 Aspect Ratio */}
       <Link href={product.href} className="block relative w-full aspect-[4/5] bg-[#FDFBF9] rounded-xl overflow-hidden mb-4">
         {/* Main Image */}
-        <Image
-          src={product.image}
+        <img
+          src={product.image.startsWith("http") || product.image.startsWith("/") ? product.image : `/${product.image}`}
           alt={product.name}
-          fill
-          className={`object-cover transition-opacity duration-700 ease-in-out ${isHovered && (product.hover_video_url || product.hoverImage) ? "opacity-0" : "opacity-100"}`}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${isHovered && (product.hover_video_url || product.hoverImage) ? "opacity-0" : "opacity-100"}`}
         />
         {/* Hover Image or Video */}
         {product.hover_video_url ? (
@@ -88,12 +86,10 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
             style={{ pointerEvents: "none" }}
           />
         ) : product.hoverImage ? (
-          <Image
-            src={product.hoverImage}
+          <img
+            src={product.hoverImage.startsWith("http") || product.hoverImage.startsWith("/") ? product.hoverImage : `/${product.hoverImage}`}
             alt={`${product.name} alternate`}
-            fill
-            className={`object-cover transition-opacity duration-700 ease-in-out ${isHovered ? "opacity-100" : "opacity-0"}`}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${isHovered ? "opacity-100" : "opacity-0"}`}
           />
         ) : null}
       </Link>

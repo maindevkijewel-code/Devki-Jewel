@@ -620,7 +620,7 @@ export function Navigation() {
                         <img
                           src={categoryImages[category.name] || "/images/hero-jewelry.jpg"}
                           alt={category.name}
-                          className="w-full h-full object-cover"
+                          className="absolute inset-0 w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                         <span className="absolute bottom-3 left-3 text-white font-semibold text-sm drop-shadow-lg">
@@ -662,7 +662,7 @@ export function Navigation() {
 
 function DevkiLogo() {
   const { settings, isLoading } = useSiteSettings()
-  const logoUrl = settings.logo_url || "/logo.png"
+  const logoUrl = settings.logo_url || "/images/devkijewel_logo.png"
 
   return (
     <div className="flex items-center gap-2">
@@ -674,7 +674,7 @@ function DevkiLogo() {
           alt={settings.site_name || "Devki Jewels"}
           className="h-12 w-auto object-contain max-md:h-8"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = "/logo.png"
+            (e.target as HTMLImageElement).src = "/images/devkijewel_logo.png"
           }}
         />
       )}
